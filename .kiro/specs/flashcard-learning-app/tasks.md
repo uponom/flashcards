@@ -14,24 +14,24 @@
   - Создать основной CSS файл для стилей
   - _Requirements: 11.1, 11.2, 11.3_
 
-- [ ] 2. Реализация Data Layer
-  - [ ] 2.1 Создать StorageManager для работы с LocalStorage
+- [x] 2. Реализация Data Layer
+  - [x] 2.1 Создать StorageManager для работы с LocalStorage
     - Реализовать методы saveCards, loadCards, saveSettings, loadSettings, clearAll
     - Добавить обработку ошибок (QuotaExceededError, corrupted data)
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-  - [ ] 2.2 Написать property-тесты для StorageManager
+  - [x] 2.2 Написать property-тесты для StorageManager
     - **Property 4: Card persistence round trip**
     - **Property 6: Storage persistence round trip**
     - **Validates: Requirements 1.5, 2.3, 2.4**
 
-  - [ ] 2.3 Создать BackupManager для экспорта/импорта
+  - [x] 2.3 Создать BackupManager для экспорта/импорта
     - Реализовать createBackup (экспорт в JSON)
     - Реализовать restoreBackup (импорт из JSON)
     - Реализовать mergeCards (объединение без дубликатов)
     - _Requirements: 3.1, 3.2, 3.4, 3.5, 3.6_
 
-  - [ ] 2.4 Написать property-тесты для BackupManager
+  - [x] 2.4 Написать property-тесты для BackupManager
     - **Property 7: Backup completeness**
     - **Property 8: Backup format validation**
     - **Property 9: Merge without duplicates**
@@ -39,13 +39,13 @@
     - **Property 11: Restore persistence**
     - **Validates: Requirements 3.1, 3.2, 3.4, 3.5, 3.6**
 
-  - [ ] 2.5 Создать CSVImporter для импорта CSV
+  - [x] 2.5 Создать CSVImporter для импорта CSV
     - Реализовать parseCSV (парсинг CSV файлов)
     - Реализовать validateCSVData (валидация данных)
     - Добавить обработку ошибок для невалидных файлов
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-  - [ ] 2.6 Написать property-тесты для CSVImporter
+  - [x] 2.6 Написать property-тесты для CSVImporter
     - **Property 12: CSV parsing validity**
     - **Property 13: CSV required fields validation**
     - **Property 14: CSV import completeness**
