@@ -56,14 +56,14 @@
   - Убедиться что все тесты проходят, спросить пользователя если возникли вопросы.
 
 - [ ] 4. Реализация Business Logic Layer
-  - [ ] 4.1 Создать CardManager для управления карточками
+  - [x] 4.1 Создать CardManager для управления карточками
     - Реализовать createCard (создание с валидацией)
     - Реализовать updateCard (обновление с сохранением статистики)
     - Реализовать deleteCard, getAllCards, getCardsByTags
     - Реализовать importCards (merge/overwrite режимы)
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.7, 1.8, 5.2_
 
-  - [ ] 4.2 Написать property-тесты для CardManager
+  - [x] 4.2 Написать property-тесты для CardManager
     - **Property 1: Card creation validation**
     - **Property 2: Optional fields acceptance**
     - **Property 3: Card addition to collection**
@@ -71,13 +71,13 @@
     - **Property 17: Tag filtering correctness**
     - **Validates: Requirements 1.2, 1.3, 1.4, 1.8, 5.2**
 
-  - [ ] 4.3 Создать StatisticsTracker для отслеживания статистики
+  - [x] 4.3 Создать StatisticsTracker для отслеживания статистики
     - Реализовать incrementKnown, incrementDontKnow
     - Реализовать getStatistics
     - Обеспечить персистентность статистики
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [ ] 4.4 Написать property-тесты для StatisticsTracker
+  - [x] 4.4 Написать property-тесты для StatisticsTracker
     - **Property 19: New card statistics initialization**
     - **Property 20: Statistics increment correctness**
     - **Property 21: Statistics persistence**
