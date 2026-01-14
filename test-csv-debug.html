@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CSV Debug</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+    .pass { color: #4ec9b0; }
+    .fail { color: #f48771; }
+    pre { background: #252526; padding: 10px; border-radius: 4px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>CSV Parser Debug</h1>
+  <pre id="output"></pre>
+
+  <script src="src/test-utils/test-runner.js"></script>
+  <script src="src/test-utils/test-generators.js"></script>
+  <script src="src/data/StorageManager.js"></script>
+  <script src="src/data/CSVImporter.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    let log = '';
+    
+    function print(msg) {
+      log += msg + '\n';
+      output.textContent = log;
+      console.log(msg);
+    }
+
+    async function test() {
+      try {
+        const storage = new StorageManager();
+        const importer = new CSVImporter(storage);
+        
+        // Create a simple test card
+        const testCard = {
+          word: 'hello world',
+          translation: 'привет мир',
+          tags: ['tag1', 'tag2'],
+          language: 'en'
+        };
+        
+        print('Original card:');
+        print(JSON.stringify(testCard, null, 2));
+        print('');
+        
+        // Create CSV manually
+        const csv = `word,translation,tags,language\n"${testCard.word}","${testCard.translation}","${testCard.tags.join(';')}","${testCard.language}"\n`;
+        print('Generated CSV:');
+        print(csv);
+        print('');
+        
+        // Parse it
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const file = new File([blob], 'test.csv');
+        const parsed = await importer.parseCSV(file);
+        
+        print('Parsed result:');
+        print(JSON.stringify(parsed, null, 2));
+        print('');
+        
+        // Compare
+        print('Comparison:');
+        print(`Word match: ${parsed[0].word === testCard.word} ("${parsed[0].word}" vs "${testCard.word}")`);
+        print(`Translation match: ${parsed[0].translation === testCard.translation} ("${parsed[0].translation}" vs "${testCard.translation}")`);
+        print(`Tags match: ${JSON.stringify(parsed[0].tags) === JSON.stringify(testCard.tags)}`);
+        print(`Language match: ${parsed[0].language === testCard.language}`);
+        
+      } catch (error) {
+        print('');
+        print(`ERROR: ${error.message}`);
+        print(error.stack);
+      }
+    }
+
+    test();
+  </script>
+</body>
+</html>

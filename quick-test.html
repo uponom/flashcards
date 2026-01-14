@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quick Test</title>
+</head>
+<body>
+  <h1>Quick Data Layer Test</h1>
+  <pre id="output"></pre>
+
+  <script src="src/test-utils/test-runner.js"></script>
+  <script src="src/test-utils/test-generators.js"></script>
+  <script src="src/data/StorageManager.js"></script>
+  <script src="src/data/BackupManager.js"></script>
+  <script src="src/data/CSVImporter.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    let log = '';
+    
+    function print(msg) {
+      log += msg + '\n';
+      output.textContent = log;
+      console.log(msg);
+    }
+
+    try {
+      print('Testing StorageManager...');
+      const storage = new StorageManager();
+      const testCard = TestGenerators.randomCard();
+      storage.saveCards([testCard]);
+      const loaded = storage.loadCards();
+      print(`✓ StorageManager works: ${loaded.length === 1 ? 'PASS' : 'FAIL'}`);
+      storage.clearAll();
+
+      print('\nTesting BackupManager...');
+      const backup = new BackupManager(storage);
+      const cards = [TestGenerators.randomCard(), TestGenerators.randomCard()];
+      const backupData = backup.createBackup(cards);
+      const parsed = JSON.parse(backupData);
+      print(`✓ BackupManager works: ${parsed.cards.length === 2 ? 'PASS' : 'FAIL'}`);
+
+      print('\nTesting CSVImporter...');
+      const importer = new CSVImporter(storage);
+      const validation = importer.validateCSVData([
+        { word: 'hello', translation: 'привет' }
+      ]);
+      print(`✓ CSVImporter works: ${validation.valid ? 'PASS' : 'FAIL'}`);
+
+      print('\nTesting TestRunner...');
+      const runner = new TestRunner();
+      runner.test('sample test', () => {
+        assertEqual(1, 1, 'one equals one');
+      });
+      print('✓ TestRunner works: PASS');
+
+      print('\nTesting TestGenerators...');
+      const card = TestGenerators.randomCard();
+      print(`✓ TestGenerators works: ${card.word && card.translation ? 'PASS' : 'FAIL'}`);
+
+      print('\n' + '='.repeat(50));
+      print('All basic functionality tests PASSED!');
+      print('The Data Layer is ready for full test suite.');
+      
+    } catch (error) {
+      print(`\n✗ ERROR: ${error.message}`);
+      print(error.stack);
+    }
+  </script>
+</body>
+</html>

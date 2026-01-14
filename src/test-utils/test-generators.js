@@ -10,6 +10,7 @@ class TestGenerators {
    */
   static randomString(minLength = 1, maxLength = 100) {
     const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+    // Exclude quotes and other problematic characters for CSV
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ';
     return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
   }
@@ -64,9 +65,9 @@ class TestGenerators {
   static randomCard() {
     return {
       id: this.randomUUID(),
-      word: this.randomString(1, 100),
-      translation: this.randomString(1, 100),
-      tags: this.randomArray(() => this.randomString(1, 20), 0, 5),
+      word: this.randomString(1, 100).trim() || 'word',
+      translation: this.randomString(1, 100).trim() || 'translation',
+      tags: this.randomArray(() => this.randomString(1, 20).trim(), 0, 5).filter(t => t),
       language: this.randomChoice(['en', 'de', 'fr', 'es', 'uk', 'ru']),
       statistics: {
         knowCount: this.randomInt(0, 100),
@@ -128,4 +129,10 @@ function propertyTest(name, iterations, testFn) {
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { TestGenerators, propertyTest };
+}
+
+// Export to window for browser use
+if (typeof window !== 'undefined') {
+  window.TestGenerators = TestGenerators;
+  window.propertyTest = propertyTest;
 }

@@ -83,3 +83,11 @@ function assertThrows(fn, message) {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { TestRunner, assert, assertEqual, assertThrows };
 }
+
+// Export to window for browser use
+if (typeof window !== 'undefined') {
+  window.TestRunner = TestRunner;
+  window.assert = assert;
+  window.assertEqual = assertEqual;
+  window.assertThrows = assertThrows;
+}

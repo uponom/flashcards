@@ -29,8 +29,12 @@ function runCSVImporterTests(runner, generators, propertyTest, assertEqual, asse
     }
     
     cards.forEach(card => {
-      const tags = Array.isArray(card.tags) ? card.tags.join(',') : '';
-      csv += `"${card.word}","${card.translation}","${tags}","${card.language || 'en'}"\n`;
+      // Escape quotes by doubling them (CSV standard)
+      const word = (card.word || '').replace(/"/g, '""');
+      const translation = (card.translation || '').replace(/"/g, '""');
+      const tags = Array.isArray(card.tags) ? card.tags.join(';') : '';
+      const language = card.language || 'en';
+      csv += `"${word}","${translation}","${tags}","${language}"\n`;
     });
     
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -263,8 +267,8 @@ function runCSVImporterTests(runner, generators, propertyTest, assertEqual, asse
     const storageManager = new StorageManager();
     const importer = new CSVImporter(storageManager);
     
-    // Create CSV with special characters
-    const csv = 'word,translation,tags,language\n"hello, world","привет, мир","greeting,common","ru"\n';
+    // Create CSV with special characters (using semicolon for tags)
+    const csv = 'word,translation,tags,language\n"hello, world","привет, мир","greeting;common","ru"\n';
     const blob = new Blob([csv], { type: 'text/csv' });
     const file = new File([blob], 'special.csv');
     

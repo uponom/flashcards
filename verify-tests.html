@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Layer Test Verification</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    .pass { color: #4ec9b0; }
+    .fail { color: #f48771; }
+    .info { color: #569cd6; }
+    pre { background: #252526; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Data Layer Test Verification</h1>
+  <div id="output"></div>
+
+  <script src="src/test-utils/test-runner.js"></script>
+  <script src="src/test-utils/test-generators.js"></script>
+  <script src="src/data/StorageManager.js"></script>
+  <script src="src/data/BackupManager.js"></script>
+  <script src="src/data/CSVImporter.js"></script>
+  <script src="src/data/StorageManager.test.js"></script>
+  <script src="src/data/BackupManager.test.js"></script>
+  <script src="src/data/CSVImporter.test.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    
+    async function runTests() {
+      output.innerHTML = '<p class="info">Running tests...</p>';
+      
+      try {
+        const runner = new TestRunner();
+        
+        // Register all tests - use window globals
+        runStorageManagerTests(runner, TestGenerators, propertyTest, assertEqual);
+        runBackupManagerTests(runner, TestGenerators, propertyTest, assertEqual, assert);
+        runCSVImporterTests(runner, TestGenerators, propertyTest, assertEqual, assert);
+
+        // Run tests
+        const results = await runner.run();
+
+        // Display results
+        let html = `
+          <h2>Test Results</h2>
+          <p class="pass">✓ Passed: ${results.passed}</p>
+          <p class="fail">✗ Failed: ${results.failed}</p>
+          <p class="info">Total: ${results.passed + results.failed}</p>
+        `;
+
+        if (results.errors.length > 0) {
+          html += '<h3>Failures:</h3>';
+          results.errors.forEach(e => {
+            html += `<pre class="fail">❌ ${e.test}\n${e.error.message}</pre>`;
+          });
+        } else {
+          html += '<p class="pass">🎉 All tests passed!</p>';
+        }
+
+        output.innerHTML = html;
+        
+        // Also log to console
+        console.log('Test Results:', results);
+      } catch (error) {
+        output.innerHTML = `<pre class="fail">Error: ${error.message}\n${error.stack}</pre>`;
+        console.error('Test error:', error);
+      }
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', runTests);
+  </script>
+</body>
+</html>

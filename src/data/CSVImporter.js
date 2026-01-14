@@ -63,7 +63,7 @@ class CSVImporter {
               word,
               translation,
               tags: tagsIndex !== -1 && values[tagsIndex] 
-                ? values[tagsIndex].split(',').map(t => t.trim()).filter(t => t)
+                ? values[tagsIndex].split(';').map(t => t.trim()).filter(t => t)
                 : [],
               language: languageIndex !== -1 && values[languageIndex]
                 ? values[languageIndex].trim()
@@ -107,9 +107,17 @@ class CSVImporter {
     
     for (let i = 0; i < line.length; i++) {
       const char = line[i];
+      const nextChar = line[i + 1];
       
       if (char === '"') {
-        inQuotes = !inQuotes;
+        if (inQuotes && nextChar === '"') {
+          // Escaped quote (two quotes in a row)
+          current += '"';
+          i++; // Skip next quote
+        } else {
+          // Toggle quote mode
+          inQuotes = !inQuotes;
+        }
       } else if (char === ',' && !inQuotes) {
         values.push(current);
         current = '';
@@ -196,4 +204,9 @@ class CSVImporter {
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = CSVImporter;
+}
+
+// Export to window for browser use
+if (typeof window !== 'undefined') {
+  window.CSVImporter = CSVImporter;
 }

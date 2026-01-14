@@ -52,7 +52,7 @@
     - **Property 15: CSV import persistence**
     - **Validates: Requirements 4.1, 4.2, 4.4, 4.5**
 
-- [ ] 3. Checkpoint - Убедиться что Data Layer работает корректно
+- [x] 3. Checkpoint - Убедиться что Data Layer работает корректно
   - Убедиться что все тесты проходят, спросить пользователя если возникли вопросы.
 
 - [ ] 4. Реализация Business Logic Layer

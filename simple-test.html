@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+    .pass { color: #4ec9b0; }
+    .fail { color: #f48771; }
+  </style>
+</head>
+<body>
+  <h1>Simple Export Test</h1>
+  <pre id="output"></pre>
+
+  <script src="src/test-utils/test-runner.js"></script>
+  <script src="src/test-utils/test-generators.js"></script>
+  <script src="src/data/StorageManager.js"></script>
+  <script src="src/data/BackupManager.js"></script>
+  <script src="src/data/CSVImporter.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    let log = '';
+    
+    function print(msg, pass = true) {
+      const className = pass ? 'pass' : 'fail';
+      log += `<div class="${className}">${msg}</div>`;
+      output.innerHTML = log;
+    }
+
+    // Test that all exports are available
+    print('Testing exports...');
+    print('');
+    
+    print(`TestRunner: ${typeof TestRunner}`, typeof TestRunner === 'function');
+    print(`TestGenerators: ${typeof TestGenerators}`, typeof TestGenerators === 'function');
+    print(`propertyTest: ${typeof propertyTest}`, typeof propertyTest === 'function');
+    print(`assert: ${typeof assert}`, typeof assert === 'function');
+    print(`assertEqual: ${typeof assertEqual}`, typeof assertEqual === 'function');
+    print(`assertThrows: ${typeof assertThrows}`, typeof assertThrows === 'function');
+    print('');
+    
+    print(`StorageManager: ${typeof StorageManager}`, typeof StorageManager === 'function');
+    print(`BackupManager: ${typeof BackupManager}`, typeof BackupManager === 'function');
+    print(`CSVImporter: ${typeof CSVImporter}`, typeof CSVImporter === 'function');
+    print('');
+    
+    // Test basic functionality
+    try {
+      const storage = new StorageManager();
+      print('✓ StorageManager instance created', true);
+      
+      const card = TestGenerators.randomCard();
+      print(`✓ Generated card: ${card.word}`, true);
+      
+      storage.saveCards([card]);
+      const loaded = storage.loadCards();
+      print(`✓ Saved and loaded ${loaded.length} card(s)`, loaded.length === 1);
+      
+      assertEqual(loaded[0].word, card.word);
+      print('✓ assertEqual works', true);
+      
+      assert(loaded.length === 1);
+      print('✓ assert works', true);
+      
+      storage.clearAll();
+      print('✓ Cleanup successful', true);
+      
+      print('');
+      print('🎉 All basic tests passed!', true);
+      
+    } catch (error) {
+      print('');
+      print(`✗ Error: ${error.message}`, false);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

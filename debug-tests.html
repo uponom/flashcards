@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Tests</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-size: 14px;
+    }
+    .pass { color: #4ec9b0; }
+    .fail { color: #f48771; }
+    .info { color: #569cd6; }
+    .warn { color: #dcdcaa; }
+    pre { 
+      background: #252526; 
+      padding: 10px; 
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .error-detail {
+      margin-left: 20px;
+      font-size: 12px;
+      color: #ce9178;
+    }
+  </style>
+</head>
+<body>
+  <h1>Debug Test Runner</h1>
+  <div id="output"></div>
+
+  <script src="src/test-utils/test-runner.js"></script>
+  <script src="src/test-utils/test-generators.js"></script>
+  <script src="src/data/StorageManager.js"></script>
+  <script src="src/data/BackupManager.js"></script>
+  <script src="src/data/CSVImporter.js"></script>
+  <script src="src/data/StorageManager.test.js"></script>
+  <script src="src/data/BackupManager.test.js"></script>
+  <script src="src/data/CSVImporter.test.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    let log = '';
+    
+    function print(msg, className = '') {
+      const line = `<div class="${className}">${msg}</div>`;
+      log += line;
+      output.innerHTML = log;
+      console.log(msg);
+    }
+
+    async function runTests() {
+      print('🔍 Starting debug test run...', 'info');
+      print('');
+      
+      try {
+        // Check if all required objects are loaded
+        print('📦 Checking loaded modules:', 'info');
+        print(`  TestRunner: ${typeof TestRunner}`, typeof TestRunner === 'function' ? 'pass' : 'fail');
+        print(`  TestGenerators: ${typeof TestGenerators}`, typeof TestGenerators === 'function' ? 'pass' : 'fail');
+        print(`  propertyTest: ${typeof propertyTest}`, typeof propertyTest === 'function' ? 'pass' : 'fail');
+        print(`  assert: ${typeof assert}`, typeof assert === 'function' ? 'pass' : 'fail');
+        print(`  assertEqual: ${typeof assertEqual}`, typeof assertEqual === 'function' ? 'pass' : 'fail');
+        print(`  StorageManager: ${typeof StorageManager}`, typeof StorageManager === 'function' ? 'pass' : 'fail');
+        print(`  BackupManager: ${typeof BackupManager}`, typeof BackupManager === 'function' ? 'pass' : 'fail');
+        print(`  CSVImporter: ${typeof CSVImporter}`, typeof CSVImporter === 'function' ? 'pass' : 'fail');
+        print('');
+
+        // Check test functions
+        print('📋 Checking test registration functions:', 'info');
+        print(`  runStorageManagerTests: ${typeof runStorageManagerTests}`, typeof runStorageManagerTests === 'function' ? 'pass' : 'fail');
+        print(`  runBackupManagerTests: ${typeof runBackupManagerTests}`, typeof runBackupManagerTests === 'function' ? 'pass' : 'fail');
+        print(`  runCSVImporterTests: ${typeof runCSVImporterTests}`, typeof runCSVImporterTests === 'function' ? 'pass' : 'fail');
+        print('');
+
+        // Try to create instances
+        print('🏗️ Testing instance creation:', 'info');
+        try {
+          const storage = new StorageManager();
+          print('  ✓ StorageManager instance created', 'pass');
+        } catch (e) {
+          print(`  ✗ StorageManager error: ${e.message}`, 'fail');
+        }
+
+        try {
+          const storage = new StorageManager();
+          const backup = new BackupManager(storage);
+          print('  ✓ BackupManager instance created', 'pass');
+        } catch (e) {
+          print(`  ✗ BackupManager error: ${e.message}`, 'fail');
+        }
+
+        try {
+          const storage = new StorageManager();
+          const importer = new CSVImporter(storage);
+          print('  ✓ CSVImporter instance created', 'pass');
+        } catch (e) {
+          print(`  ✗ CSVImporter error: ${e.message}`, 'fail');
+        }
+        print('');
+
+        // Try to generate test data
+        print('🎲 Testing data generators:', 'info');
+        try {
+          const card = TestGenerators.randomCard();
+          print(`  ✓ Generated card: ${card.word} = ${card.translation}`, 'pass');
+        } catch (e) {
+          print(`  ✗ Generator error: ${e.message}`, 'fail');
+        }
+        print('');
+
+        // Now run actual tests
+        print('🧪 Running test suite...', 'info');
+        print('');
+        
+        const runner = new TestRunner();
+        
+        // Register all tests
+        print('Registering StorageManager tests...', 'info');
+        runStorageManagerTests(runner, TestGenerators, propertyTest, assertEqual);
+        
+        print('Registering BackupManager tests...', 'info');
+        runBackupManagerTests(runner, TestGenerators, propertyTest, assertEqual, assert);
+        
+        print('Registering CSVImporter tests...', 'info');
+        runCSVImporterTests(runner, TestGenerators, propertyTest, assertEqual, assert);
+        
+        print(`Total tests registered: ${runner.tests.length}`, 'info');
+        print('');
+
+        // Run tests
+        const results = await runner.run();
+
+        // Display results
+        print('');
+        print('═'.repeat(60), 'info');
+        print('📊 TEST RESULTS', 'info');
+        print('═'.repeat(60), 'info');
+        print(`✓ Passed: ${results.passed}`, 'pass');
+        print(`✗ Failed: ${results.failed}`, 'fail');
+        print(`Total: ${results.passed + results.failed}`, 'info');
+
+        if (results.errors.length > 0) {
+          print('');
+          print('❌ FAILURES:', 'fail');
+          print('─'.repeat(60), 'fail');
+          results.errors.forEach((e, index) => {
+            print('');
+            print(`${index + 1}. ${e.test}`, 'fail');
+            print(`   ${e.error.message}`, 'error-detail');
+            if (e.error.stack) {
+              const stackLines = e.error.stack.split('\n').slice(1, 4);
+              stackLines.forEach(line => {
+                print(`   ${line.trim()}`, 'error-detail');
+              });
+            }
+          });
+        } else {
+          print('');
+          print('🎉 All tests passed!', 'pass');
+        }
+        
+      } catch (error) {
+        print('');
+        print('💥 FATAL ERROR:', 'fail');
+        print(error.message, 'fail');
+        print('');
+        print('Stack trace:', 'error-detail');
+        if (error.stack) {
+          error.stack.split('\n').forEach(line => {
+            print(line, 'error-detail');
+          });
+        }
+        console.error('Fatal error:', error);
+      }
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', runTests);
+  </script>
+</body>
+</html>

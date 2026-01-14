@@ -125,3 +125,8 @@ class BackupManager {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = BackupManager;
 }
+
+// Export to window for browser use
+if (typeof window !== 'undefined') {
+  window.BackupManager = BackupManager;
+}
