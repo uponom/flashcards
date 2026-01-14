@@ -84,7 +84,7 @@
     - **Property 22: Statistics as card data**
     - **Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5**
 
-  - [ ] 4.5 Создать SelectionAlgorithm для адаптивного показа
+  - [x] 4.5 Создать SelectionAlgorithm для адаптивного показа
     - Реализовать calculateProbability (формула weight = 1 / (1 + ratio))
     - Реализовать selectNext (взвешенный случайный выбор)
     - _Requirements: 7.1, 7.2, 7.3_
