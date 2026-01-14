@@ -89,7 +89,7 @@
     - Реализовать selectNext (взвешенный случайный выбор)
     - _Requirements: 7.1, 7.2, 7.3_
 
-  - [ ] 4.6 Написать property-тесты для SelectionAlgorithm
+  - [x] 4.6 Написать property-тесты для SelectionAlgorithm
     - **Property 23: Probability calculation correctness**
     - **Property 24: Probability inversely proportional to ratio**
     - **Validates: Requirements 7.1, 7.2, 7.3**
