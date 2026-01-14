@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flashcard Learning App - Learn vocabulary with adaptive flashcards">
+  <meta name="theme-color" content="#4A90E2">
+  <title>Flashcard Learning App</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+</head>
+<body>
+  <div id="app">
+    <!-- Main application container -->
+    <header id="app-header">
+      <h1 id="app-title">Flashcard Learning</h1>
+      <nav id="main-nav">
+        <button id="nav-study" class="nav-btn active" data-screen="study">Study</button>
+        <button id="nav-cards" class="nav-btn" data-screen="cards">Cards</button>
+        <button id="nav-settings" class="nav-btn" data-screen="settings">Settings</button>
+      </nav>
+    </header>
+
+    <main id="app-main">
+      <!-- Study Screen -->
+      <section id="study-screen" class="screen active">
+        <div id="flashcard-container">
+          <div id="flashcard" class="flashcard">
+            <div class="flashcard-inner">
+              <div class="flashcard-front">
+                <p id="card-word" class="card-text"></p>
+              </div>
+              <div class="flashcard-back">
+                <p id="card-translation" class="card-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="study-controls">
+          <button id="btn-dont-know" class="control-btn dont-know">Don't Know</button>
+          <button id="btn-flip" class="control-btn flip">Flip</button>
+          <button id="btn-know" class="control-btn know">Know</button>
+        </div>
+
+        <div id="tts-controls">
+          <button id="btn-tts-toggle" class="icon-btn" title="Toggle pronunciation">
+            <span id="tts-icon">🔊</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Card List Screen -->
+      <section id="cards-screen" class="screen">
+        <div id="tag-filter">
+          <label for="tag-select">Filter by tags:</label>
+          <div id="tag-select" class="tag-container"></div>
+        </div>
+        <div id="card-list" class="card-list"></div>
+      </section>
+
+      <!-- Settings Screen -->
+      <section id="settings-screen" class="screen">
+        <div class="settings-group">
+          <h2>Interface Language</h2>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="uk">Українська</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+
+        <div class="settings-group">
+          <h2>Backup & Import</h2>
+          <button id="btn-export" class="settings-btn">Export Backup</button>
+          <button id="btn-import" class="settings-btn">Import Backup</button>
+          <input type="file" id="file-import" accept=".json" style="display: none;">
+          <button id="btn-import-csv" class="settings-btn">Import CSV</button>
+          <input type="file" id="file-csv" accept=".csv" style="display: none;">
+        </div>
+      </section>
+    </main>
+
+    <!-- Floating Add Button -->
+    <button id="btn-add-card" class="fab" title="Add new card">+</button>
+
+    <!-- Card Form Modal -->
+    <div id="card-form-modal" class="modal">
+      <div class="modal-content">
+        <h2 id="form-title">Add New Card</h2>
+        <form id="card-form">
+          <div class="form-group">
+            <label for="input-word">Word/Phrase *</label>
+            <input type="text" id="input-word" required>
+          </div>
+          <div class="form-group">
+            <label for="input-translation">Translation *</label>
+            <input type="text" id="input-translation" required>
+          </div>
+          <div class="form-group">
+            <label for="input-tags">Tags (comma-separated)</label>
+            <input type="text" id="input-tags" placeholder="e.g., verbs, common, travel">
+          </div>
+          <div class="form-group">
+            <label for="input-language">Language</label>
+            <select id="input-language">
+              <option value="">Default</option>
+              <option value="en">English</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+              <option value="uk">Українська</option>
+              <option value="ru">Русский</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="btn-cancel" class="btn-secondary">Cancel</button>
+            <button type="submit" id="btn-save" class="btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

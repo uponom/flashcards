@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard App - Test Runner</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #f5f7fa;
+    }
+    h1 {
+      color: #4A90E2;
+    }
+    #results {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+    .test-pass {
+      color: #50C878;
+      font-weight: 600;
+    }
+    .test-fail {
+      color: #E74C3C;
+      font-weight: 600;
+    }
+    .test-item {
+      padding: 0.5rem;
+      border-bottom: 1px solid #e1e8ed;
+    }
+    .test-item:last-child {
+      border-bottom: none;
+    }
+    .summary {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #f5f7fa;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Flashcard Learning App - Test Runner</h1>
+  <p>This page will run all tests when test files are implemented.</p>
+  
+  <div id="results">
+    <div class="summary">
+      <p>Test framework ready. Implement test files in:</p>
+      <ul>
+        <li>src/data/*.test.js</li>
+        <li>src/business/*.test.js</li>
+        <li>src/components/*.test.js</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module">
+    // Test runner will be implemented here
+    console.log('[Test Runner] Ready to run tests');
+    
+    // Basic setup verification
+    const checks = [
+      { name: 'LocalStorage available', test: () => typeof localStorage !== 'undefined' },
+      { name: 'Service Worker supported', test: () => 'serviceWorker' in navigator },
+      { name: 'ES6 modules supported', test: () => true },
+      { name: 'Web Speech API available', test: () => 'speechSynthesis' in window }
+    ];
+
+    const resultsDiv = document.getElementById('results');
+    let html = '<div class="summary"><strong>Environment Checks:</strong></div>';
+    
+    checks.forEach(check => {
+      const passed = check.test();
+      const status = passed ? '✓' : '✗';
+      const className = passed ? 'test-pass' : 'test-fail';
+      html += `<div class="test-item"><span class="${className}">${status}</span> ${check.name}</div>`;
+    });
+    
+    resultsDiv.innerHTML = html;
+  </script>
+</body>
+</html>
